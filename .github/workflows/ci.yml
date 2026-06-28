@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "app/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/**"
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }} / macOS
+    runs-on: macos-14   # Apple Silicon runner
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: app
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Syntax check — all modules
+        working-directory: app
+        run: |
+          python -m py_compile nexus/core/config.py
+          python -m py_compile nexus/core/exceptions.py
+          python -m py_compile nexus/core/screenshot.py
+          python -m py_compile nexus/core/memory.py
+          python -m py_compile nexus/core/planner.py
+          python -m py_compile nexus/core/verifier.py
+          python -m py_compile nexus/core/vision.py
+          python -m py_compile nexus/utils/permissions.py
+          python -m py_compile nexus/utils/notify.py
+
+      - name: Run unit tests (no permissions, no API key, no Ollama)
+        working-directory: app
+        run: |
+          pytest tests/ -v \
+            --ignore=tests/test_ax_tree.py \
+            --ignore=tests/test_e2e.py \
+            -m "not integration and not e2e" \
+            --timeout=30
+
+      - name: Upload coverage
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/.pytest_cache/

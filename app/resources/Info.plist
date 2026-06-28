@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Nexus</string>
+    <key>CFBundleDisplayName</key>
+    <string>Nexus</string>
+    <key>CFBundleIdentifier</key>
+    <string>ai.nexus.app</string>
+    <key>CFBundleVersion</key>
+    <string>0.1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>nexus</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- TCC permission usage descriptions — required on macOS 14+ -->
+    <key>NSScreenCaptureUsageDescription</key>
+    <string>Nexus needs screen capture access to see what's on your screen and automate tasks.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Nexus needs Accessibility access to read and interact with UI elements across all apps.</string>
+
+    <!-- Entitlements for unsigned/ad-hoc distribution -->
+    <key>SecTaskAccess</key>
+    <array>
+        <string>allowed</string>
+    </array>
+</dict>
+</plist>
